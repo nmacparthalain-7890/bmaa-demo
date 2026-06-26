@@ -1,0 +1,29 @@
+version: "3"
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: wiki
+      POSTGRES_PASSWORD: wiki-password
+      POSTGRES_USER: wiki
+    logging:
+      driver: "none"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  wiki:
+    image: requarks/wiki:2
+    depends_on:
+      - db
+    environment:
+      DB_TYPE: postgres
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: wiki
+      DB_PASS: wiki-password
+      DB_NAME: wiki
+    ports:
+      - "3000:3000"
+
+volumes:
+  db-data:
